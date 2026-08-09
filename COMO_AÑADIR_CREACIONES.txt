@@ -1,0 +1,44 @@
+SEMoca3D — CREACIONES EN products.json
+
+Para añadir una creación NO tienes que tocar index.html ni gallery.
+
+1. Mete las fotos y vídeos en assets/
+2. Abre products.json
+3. Añade otro objeto al listado.
+
+Ejemplo:
+
+{
+  "id": "mi-lampara",
+  "nombre": "Mi lámpara",
+  "categoria": "lamparas",
+  "categoriaTexto": "LÁMPARAS",
+  "descripcion": "Lámpara decorativa impresa en 3D.",
+  "fotos": [
+    "assets/lampara-1.jpg",
+    "assets/lampara-2.jpg",
+    "assets/lampara-3.jpg"
+  ],
+  "video": "assets/lampara-video.mp4",
+  "colores": [
+    {"nombre": "Blanco", "hex": "#ffffff"},
+    {"nombre": "Negro", "hex": "#111111"}
+  ],
+  "medidas": "100 × 100 × 100 mm"
+}
+
+Categorías:
+llaveros
+lamparas
+personalizados
+decoracion
+maquetas
+otros
+
+La primera foto es la de la tarjeta de portada.
+Todas las fotos se muestran en la ficha.
+El vídeo es opcional: usa "" si no hay.
+
+IMPORTANTE:
+En Cloudflare Pages funcionará directamente.
+Si abres index.html con doble clic, algunos navegadores pueden bloquear la lectura de products.json.

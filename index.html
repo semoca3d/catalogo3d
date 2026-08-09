@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Semoca3D — Creaciones en impresión 3D</title>
+  <meta name="description" content="Creaciones originales de impresión 3D: llaveros, lámparas y piezas personalizadas.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container nav">
+    <a class="logo" href="#">Semoca<span>3D</span></a>
+    <nav>
+      <a href="#creaciones">Creaciones</a>
+      <a href="#sobre">Sobre mí</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">DISEÑO · IMPRESIÓN · CREATIVIDAD</p>
+        <h1>Ideas que cobran<br><span>forma en 3D.</span></h1>
+        <p class="lead">Creaciones diseñadas e impresas con mimo: llaveros, lámparas, piezas decorativas y proyectos personalizados.</p>
+        <a class="button" href="#creaciones">Ver creaciones</a>
+      </div>
+      <div class="hero-card">
+        <div class="cube">3D</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PORTAFOLIO / GALERÍA -->
+  <section id="creaciones" class="section">
+    <div class="container">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">PORTFOLIO</p>
+          <h2>Mis creaciones</h2>
+        </div>
+        <p>Una selección de proyectos realizados en impresión 3D.</p>
+      </div>
+
+      <!-- FILTROS -->
+      <div class="filters">
+        <button class="filter active" data-filter="all">Todo</button>
+        <button class="filter" data-filter="llaveros">Llaveros</button>
+        <button class="filter" data-filter="lamparas">Lámparas</button>
+        <button class="filter" data-filter="otros">Otros</button>
+      </div>
+
+      <!-- CONTENEDOR DINÁMICO (Generado con JS) -->
+      <div class="gallery" id="gallery"></div>
+    </div>
+  </section>
+
+  <!-- SOBRE MÍ -->
+  <section id="sobre" class="section dark">
+    <div class="container about">
+      <div>
+        <p class="eyebrow">SEMOCA3D</p>
+        <h2>Diseño mis propias piezas y las convierto en objetos reales.</h2>
+      </div>
+      <p>Este espacio reúne mis creaciones de impresión 3D, desde pequeños detalles hasta proyectos más elaborados. Aquí podrás ver cada pieza, conocer sus características y descubrir nuevos diseños.</p>
+    </div>
+  </section>
+
+  <!-- CONTACTO -->
+  <section id="contacto" class="section contact">
+    <div class="container contact-box">
+      <div>
+        <p class="eyebrow">CONTACTO</p>
+        <h2>¿Tienes una idea?</h2>
+        <p>Cuéntame qué necesitas y hablamos sobre el diseño y la impresión.</p>
+      </div>
+      <a class="button" href="mailto:TU_EMAIL_AQUI">Escribirme</a>
+    </div>
+  </section>
+</main>
+
+<!-- MODAL / DETALLE DE PRODUCTO -->
+<div class="modal" id="productModal" aria-hidden="true">
+  <div class="modal-backdrop"></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" aria-label="Cerrar">×</button>
+    <div class="modal-grid">
+      <div>
+        <div class="modal-main-photo placeholder" id="modalPhoto"><span>FOTO</span></div>
+        <div class="modal-thumbs" id="modalThumbs">
+          <div class="thumb placeholder"><span>1</span></div>
+          <div class="thumb placeholder"><span>2</span></div>
+          <div class="thumb placeholder"><span>3</span></div>
+        </div>
+      </div>
+      <div class="modal-info">
+        <small id="modalCategory">CATEGORÍA</small>
+        <h2 id="modalTitle">Nombre de la pieza</h2>
+        <p id="modalDescription"></p>
+        
+        <div class="info-block">
+          <h4>Colores disponibles</h4>
+          <div class="colors" id="modalColors"></div>
+        </div>
+        
+        <div class="info-block">
+          <h4>Medidas</h4>
+          <div class="measurements" id="modalMeasurements"></div>
+        </div>
+
+        <div class="process-video" id="modalVideoBlock" style="display: none;">
+          <h4>Así se crea</h4>
+          <video id="modalVideo" controls playsinline preload="metadata"></video>
+        </div>
+
+        <a class="button" href="#contacto" id="modalContact" onclick="closeModal()">Consultar esta pieza</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">© 2026 Semoca3D · Creaciones en impresión 3D</div>
+</footer>
+
+<script>
+let products = [];
+const gallery = document.getElementById('gallery');
+const modal = document.getElementById('productModal');
+const video = document.getElementById('modalVideo');
+
+function esc(s='') {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+  }[c]));
+}
+
+function renderGallery(list = products) {
+  if (list.length === 0) {
+    gallery.innerHTML = '<p>No hay productos en esta categoría.</p>';
+    return;
+  }
+
+  gallery.innerHTML = list.map(p => `
+    <article class="card product-card" data-category="${esc(p.categoria)}" data-id="${esc(p.id)}" role="button" tabindex="0">
+      <div class="photo-cover">
+        <img src="${esc(p.fotos ? p.fotos[0] : '')}" alt="${esc(p.nombre)}">
+      </div>
+      <div class="card-body">
+        <small>${esc(p.categoriaTexto || p.categoria)}</small>
+        <h3>${esc(p.nombre)}</h3>
+        <p>${esc(p.descripcion)}</p>
+        <button class="view-product" type="button">Ver pieza →</button>
+      </div>
+    </article>
+  `).join('');
+
+  gallery.querySelectorAll('.product-card').forEach(card => {
+    const open = () => openProduct(card.dataset.id);
+    card.addEventListener('click', open);
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        open();
+      }
+    });
+  });
+}
+
+function openProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+
+  document.getElementById('modalCategory').textContent = p.categoriaTexto || p.categoria;
+  document.getElementById('modalTitle').textContent = p.nombre;
+  document.getElementById('modalDescription').textContent = p.descripcion;
+
+  // Render colores
+  document.getElementById('modalColors').innerHTML =
+    (p.colores || []).map(c =>
+      `<span class="color-chip"><i style="background:${esc(c.hex)}"></i>${esc(c.nombre)}</span>`
+    ).join('');
+
+  // Render medidas
+  document.getElementById('modalMeasurements').innerHTML =
+    p.medidas ? `<span>${esc(p.medidas)}</span>` : '<span>Consultar</span>';
+
+  // Render fotos y miniatura
+  const main = document.getElementById('modalPhoto');
+  const thumbs = document.querySelectorAll('.modal-thumbs .thumb');
+  const photos = p.fotos || [];
+
+  if (photos.length) {
+    main.className = 'modal-main-photo real-photo';
+    main.innerHTML = `<img src="${esc(photos[0])}" alt="${esc(p.nombre)}">`;
+
+    thumbs.forEach((t, i) => {
+      if (i < photos.length) {
+        t.style.display = 'block';
+        t.innerHTML = `<img src="${esc(photos[i])}" alt="">`;
+        t.onclick = () => {
+          main.innerHTML = `<img src="${esc(photos[i])}" alt="${esc(p.nombre)}">`;
+        };
+      } else {
+        t.style.display = 'none';
+      }
+    });
+  }
+
+  // Render vídeo
+  const videoBlock = document.getElementById('modalVideoBlock');
+  if (p.video) {
+    videoBlock.style.display = 'block';
+    video.src = p.video;
+  } else {
+    videoBlock.style.display = 'none';
+    video.pause();
+    video.removeAttribute('src');
+  }
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('no-scroll');
+}
+
+function closeModal() {
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('no-scroll');
+  
+  // Detener el vídeo si se estaba reproduciendo
+  if (video) {
+    video.pause();
+    video.currentTime = 0;
+  }
+}
+
+// Eventos de Filtro
+document.querySelectorAll('.filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    renderGallery(filter === 'all'
+      ? products
+      : products.filter(p => p.categoria === filter));
+  });
+});
+
+// Eventos del Modal
+document.querySelector('.modal-close').addEventListener('click', closeModal);
+document.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// Cargar catálogo desde JSON
+/*fetch('products.json')
+  .then(r => {
+    if (!r.ok) throw new Error('No se pudo cargar products.json');
+    return r.json();
+  })
+  .then(data => {
+    products = data;
+    renderGallery();
+  })
+  .catch(err => {
+    console.error(err);
+    gallery.innerHTML = '<p>No se pudo cargar el catálogo. Asegúrate de tener el archivo products.json.</p>';
+  });*/
+
+// Datos del catálogo directamente integrados
+products = [
+  {
+    "id": "algeciras",
+    "nombre": "Lámpara LED con escudo del Algeciras y nombre personalizado",
+    "categoria": "lamparas",
+    "categoriaTexto": "LÁMPARAS",
+    "descripcion": "Creación personalizada en impresión 3D con nombre y diseño propio.",
+    "fotos": [
+      "assets/algeciras_berlanga.jpeg"
+    ],
+    "video": "assets/lampara_berlanga.mov",
+    "colores": [
+      { "nombre": "Verde", "hex": "#19c979" },
+      { "nombre": "Blanco", "hex": "#ffffff" },
+      { "nombre": "Dorado", "hex": "#d58a00" }
+    ],
+    "medidas": "220 mm x 160 mm x 40 mm"
+  },
+  
+  {
+    "id": "betis",
+    "nombre": "Lámpara LED con escudo del Betis y nombre personalizado",
+    "categoria": "lamparas",
+    "categoriaTexto": "LÁMPARAS",
+    "descripcion": "Creación personalizada en impresión 3D con nombre y diseño propio.",
+    "fotos": [
+      "assets/betis-tino.jpeg"
+    ],
+    "video": "assets/proceso-tino.mp4",
+    "colores": [
+      { "nombre": "Verde", "hex": "#19c979" },
+      { "nombre": "Blanco", "hex": "#ffffff" },
+      { "nombre": "Dorado", "hex": "#d58a00" }
+    ],
+    "medidas": "220 mm x 160 mm x 40 mm"
+  },
+  {
+    "id": "madrid",
+    "nombre": "Lámpara LED con escudo del Real Madrid y nombre personalizado",
+    "categoria": "lamparas",
+    "categoriaTexto": "LÁMPARAS",
+    "descripcion": "Creación personalizada en impresión 3D con escudo y nombre propio.",
+    "fotos": [
+      "assets/madrid-hugo.jpeg"
+    ],
+    "video": "",
+    "colores": [
+      { "nombre": "Azul", "hex": "#123ed0" },
+      { "nombre": "Blanco", "hex": "#ffffff" },
+      { "nombre": "Naranja", "hex": "#f28a00" }
+    ],
+    "medidas": "220 mm x 160 mm x 40 mm"
+  },
+  {
+    "id": "llavero_mario",
+    "nombre": "Llaveros Mario Bros (champiñón / interrogante)",
+    "categoria": "llaveros",
+    "categoriaTexto": "LLAVEROS",
+    "descripcion": "Creación personalizada en impresión 3D en varios colores.",
+    "fotos": [
+      "assets/llavero_mario1.jpeg",
+      "assets/llavero_mario2.jpeg"
+    ],
+    "video": "",
+    "colores": [
+      { "nombre": "Amarillo", "hex": "#ffcc00" },
+      { "nombre": "Rojo", "hex": "#e63946" },
+      { "nombre": "Azul", "hex": "#123ed0" },
+      { "nombre": "Verde", "hex": "#19c979" }
+    ],
+    "medidas": "Champiñon: 25 mm x 25 mm x 25 mm. Interrogante 30 mm x 30 mm x 30 mm"
+  },
+
+  {
+    "id": "llavero_españa",
+    "nombre": "Llavero Selección Española con copa giratoria",
+    "categoria": "llaveros",
+    "categoriaTexto": "LLAVEROS",
+    "descripcion": "Creación personalizada en impresión 3D con copa giratoria.",
+    "fotos": [
+      "assets/llavero_españa.jpeg"
+    ],
+    "video": "assets/llavero_españa.mov",
+    "colores": [
+      { "nombre": "Amarillo", "hex": "#ffcc00" },
+      { "nombre": "Rojo", "hex": "#e63946" },
+      { "nombre": "Dorado", "hex": "#d58a00"},
+      { "nombre": "Verde", "hex": "#19c979" }
+    ],
+    "medidas": "85 mm x 55 mm"
+  },
+
+  {
+    "id": "llavero_algeciras",
+    "nombre": "Llavero Algeciras",
+    "categoria": "llaveros",
+    "categoriaTexto": "LLAVEROS",
+    "descripcion": "Creación personalizada en impresión 3D con copa giratoria.",
+    "fotos": [
+      "assets/llavero_algeciras.jpeg"
+    ],
+    "video": "",
+    "colores": [
+      { "nombre": "Amarillo", "hex": "#ffcc00" },
+      { "nombre": "Rojo", "hex": "#e63946" },
+      { "nombre": "Dorado", "hex": "#d58a00"},
+      { "nombre": "Blanco", "hex": "#ffffff" },
+      { "nombre": "Verde", "hex": "#19c979" }
+    ],
+    "medidas": "85 mm x 55 mm"
+  }
+];
+
+// Cargar la galería directamente al abrir la página
+renderGallery();
+</script>
+
+</body>
+</html>

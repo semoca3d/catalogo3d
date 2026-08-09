@@ -1,0 +1,54 @@
+[
+  {
+    "id": "tino",
+    "nombre": "Escudo personalizado — Tino",
+    "categoria": "personalizados",
+    "categoriaTexto": "PERSONALIZADOS",
+    "descripcion": "Creación personalizada en impresión 3D con nombre y diseño propio.",
+    "fotos": [
+      "assets/betis-tino.jpeg"
+    ],
+    "video": "assets/proceso-tino.mov",
+    "colores": [
+      {
+        "nombre": "Verde",
+        "hex": "#19c979"
+      },
+      {
+        "nombre": "Blanco",
+        "hex": "#ffffff"
+      },
+      {
+        "nombre": "Dorado",
+        "hex": "#d58a00"
+      }
+    ],
+    "medidas": "Medidas a indicar"
+  },
+  {
+    "id": "hugo",
+    "nombre": "Escudo personalizado — Hugo",
+    "categoria": "personalizados",
+    "categoriaTexto": "PERSONALIZADOS",
+    "descripcion": "Creación personalizada en impresión 3D con escudo y nombre propio.",
+    "fotos": [
+      "assets/madrid-hugo.jpeg"
+    ],
+    "video": "",
+    "colores": [
+      {
+        "nombre": "Azul",
+        "hex": "#123ed0"
+      },
+      {
+        "nombre": "Blanco",
+        "hex": "#ffffff"
+      },
+      {
+        "nombre": "Naranja",
+        "hex": "#f28a00"
+      }
+    ],
+    "medidas": "Medidas a indicar"
+  }
+]

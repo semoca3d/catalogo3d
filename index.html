@@ -52,6 +52,7 @@
         <button class="filter active" data-filter="all">Todo</button>
         <button class="filter" data-filter="llaveros">Llaveros</button>
         <button class="filter" data-filter="lamparas">Lámparas</button>
+        <button class="filter" data-filter="letras">Letras decorativas</button>
         <button class="filter" data-filter="otros">Otros</button>
       </div>
 
@@ -277,6 +278,26 @@ document.addEventListener('keydown', e => {
 // Datos del catálogo directamente integrados
 products = [
   {
+    "id": "letra_bebe",
+    "nombre": "Letra Decorativa Bebé",
+    "categoria": "letras",
+    "categoriaTexto": "LETRAS DECORATIVAS",
+    "descripcion": "Creación personalizada en impresión 3D con tu nombre y animal deseado.",
+    "fotos": [
+      "assets/letra_bebe.jpeg"
+    ],
+    "video": "",
+    "colores": [
+      { "nombre": "Amarillo", "hex": "#ffcc00" },
+      { "nombre": "Rojo", "hex": "#e63946" },
+      { "nombre": "Dorado", "hex": "#d58a00"},
+      { "nombre": "Blanco", "hex": "#ffffff" },
+      { "nombre": "Verde", "hex": "#19c979" }
+    ],
+    "medidas": "180 mm x 150 mm"
+  },  
+
+  {
     "id": "algeciras",
     "nombre": "Lámpara LED con escudo del Algeciras y nombre personalizado",
     "categoria": "lamparas",
@@ -372,9 +393,29 @@ products = [
     "nombre": "Llavero Algeciras",
     "categoria": "llaveros",
     "categoriaTexto": "LLAVEROS",
-    "descripcion": "Creación personalizada en impresión 3D con copa giratoria.",
+    "descripcion": "Creación personalizada en impresión 3D.",
     "fotos": [
       "assets/llavero_algeciras.jpeg"
+    ],
+    "video": "",
+    "colores": [
+      { "nombre": "Amarillo", "hex": "#ffcc00" },
+      { "nombre": "Rojo", "hex": "#e63946" },
+      { "nombre": "Dorado", "hex": "#d58a00"},
+      { "nombre": "Blanco", "hex": "#ffffff" },
+      { "nombre": "Verde", "hex": "#19c979" }
+    ],
+    "medidas": "85 mm x 55 mm"
+  },
+
+  {
+    "id": "hucha_mario",
+    "nombre": "Hucha Mario Bros",
+    "categoria": "otros",
+    "categoriaTexto": "OTROS",
+    "descripcion": "Creación en impresión 3D de una hucha con tapadera superior desmontable.",
+    "fotos": [
+      "assets/hucha_mario.jpeg"
     ],
     "video": "",
     "colores": [

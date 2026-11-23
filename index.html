@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
 <header class="header">
   <div class="container nav">
     <a class="logo" href="#">Semoca<span>3D</span></a>
@@ -19,9 +18,7 @@
     </nav>
   </div>
 </header>
-
 <main>
-  <!-- HERO -->
   <section class="hero">
     <div class="container hero-grid">
       <div>
@@ -30,62 +27,38 @@
         <p class="lead">Creaciones diseñadas e impresas con mimo: llaveros, lámparas, piezas decorativas y proyectos personalizados.</p>
         <a class="button" href="#creaciones">Ver creaciones</a>
       </div>
-      <div class="hero-card">
-        <div class="cube">3D</div>
-      </div>
+      <div class="hero-card"><div class="cube">3D</div></div>
     </div>
   </section>
 
-  <!-- PORTAFOLIO / GALERÍA -->
   <section id="creaciones" class="section">
     <div class="container">
       <div class="section-title">
-        <div>
-          <p class="eyebrow">PORTFOLIO</p>
-          <h2>Mis creaciones</h2>
-        </div>
+        <div><p class="eyebrow">PORTFOLIO</p><h2>Mis creaciones</h2></div>
         <p>Una selección de proyectos realizados en impresión 3D.</p>
       </div>
-
-      <!-- FILTROS -->
-      <div class="filters">
+      <div class="filters" id="filters">
         <button class="filter active" data-filter="all">Todo</button>
-        <button class="filter" data-filter="llaveros">Llaveros</button>
-        <button class="filter" data-filter="lamparas">Lámparas</button>
-        <button class="filter" data-filter="letras">Letras decorativas</button>
-        <button class="filter" data-filter="otros">Otros</button>
       </div>
-
-      <!-- CONTENEDOR DINÁMICO (Generado con JS) -->
-      <div class="gallery" id="gallery"></div>
+      <div class="gallery" id="gallery"><p>Cargando creaciones…</p></div>
     </div>
   </section>
 
-  <!-- SOBRE MÍ -->
   <section id="sobre" class="section dark">
     <div class="container about">
-      <div>
-        <p class="eyebrow">SEMOCA3D</p>
-        <h2>Diseño mis propias piezas y las convierto en objetos reales.</h2>
-      </div>
+      <div><p class="eyebrow">SEMOCA3D</p><h2>Diseño mis propias piezas y las convierto en objetos reales.</h2></div>
       <p>Este espacio reúne mis creaciones de impresión 3D, desde pequeños detalles hasta proyectos más elaborados. Aquí podrás ver cada pieza, conocer sus características y descubrir nuevos diseños.</p>
     </div>
   </section>
 
-  <!-- CONTACTO -->
   <section id="contacto" class="section contact">
     <div class="container contact-box">
-      <div>
-        <p class="eyebrow">CONTACTO</p>
-        <h2>¿Tienes una idea?</h2>
-        <p>Cuéntame qué necesitas y hablamos sobre el diseño y la impresión.</p>
-      </div>
+      <div><p class="eyebrow">CONTACTO</p><h2>¿Tienes una idea?</h2><p>Cuéntame qué necesitas y hablamos sobre el diseño y la impresión.</p></div>
       <a class="button" href="mailto:93_rojizos_aburrir@icloud.com">Escribirme</a>
     </div>
   </section>
 </main>
 
-<!-- MODAL / DETALLE DE PRODUCTO -->
 <div class="modal" id="productModal" aria-hidden="true">
   <div class="modal-backdrop"></div>
   <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -93,80 +66,113 @@
     <div class="modal-grid">
       <div>
         <div class="modal-main-photo placeholder" id="modalPhoto"><span>FOTO</span></div>
-        <div class="modal-thumbs" id="modalThumbs">
-          <div class="thumb placeholder"><span>1</span></div>
-          <div class="thumb placeholder"><span>2</span></div>
-          <div class="thumb placeholder"><span>3</span></div>
-        </div>
+        <div class="modal-thumbs" id="modalThumbs"></div>
       </div>
       <div class="modal-info">
         <small id="modalCategory">CATEGORÍA</small>
         <h2 id="modalTitle">Nombre de la pieza</h2>
         <p id="modalDescription"></p>
-        
-        <div class="info-block">
-          <h4>Colores disponibles</h4>
-          <div class="colors" id="modalColors"></div>
-        </div>
-        
-        <div class="info-block">
-          <h4>Medidas</h4>
-          <div class="measurements" id="modalMeasurements"></div>
-        </div>
-
-        <div class="process-video" id="modalVideoBlock" style="display: none;">
+        <div class="info-block"><h4>Colores disponibles</h4><div class="colors" id="modalColors"></div></div>
+        <div class="info-block"><h4>Medidas</h4><div class="measurements" id="modalMeasurements"></div></div>
+        <div class="process-video" id="modalVideoBlock" style="display:none;">
           <h4>Así se crea</h4>
           <video id="modalVideo" controls playsinline preload="metadata"></video>
         </div>
-
-        <a class="button" href="#contacto" id="modalContact" onclick="closeModal()">Consultar esta pieza</a>
+        <a class="button" href="#contacto" id="modalContact">Consultar esta pieza</a>
       </div>
     </div>
   </div>
 </div>
 
-<footer>
-  <div class="container">© 2026 Semoca3D · Creaciones en impresión 3D</div>
-</footer>
+<footer><div class="container">© 2026 Semoca3D · Creaciones en impresión 3D</div></footer>
 
+<!-- Cliente oficial de Supabase. La clave publishable puede utilizarse en el navegador; nunca pongas aquí una secret/service_role key. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+'use strict';
+
+// Configuración del proyecto Supabase
+const SUPABASE_URL = 'https://jvpphuchvcpfcqsryvte.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4jvwUVYLIln5Jl-b3FDLtw_v9X8iG5Q';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
 let products = [];
+let activeFilter = 'all';
 const gallery = document.getElementById('gallery');
+const filters = document.getElementById('filters');
 const modal = document.getElementById('productModal');
 const video = document.getElementById('modalVideo');
 
-function esc(s='') {
-  return String(s).replace(/[&<>"']/g, c => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-  }[c]));
+function esc(value = '') {
+  return String(value).replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[character]));
 }
 
-function renderGallery(list = products) {
-  if (list.length === 0) {
+function getPhotos(product) {
+  if (Array.isArray(product.fotos)) return product.fotos.filter(Boolean);
+  return [];
+}
+
+function renderFilters() {
+  const categories = [...new Set(products.map(p => p.categoria).filter(Boolean))];
+  const preferredOrder = ['llaveros', 'lamparas', 'letras', 'otros'];
+  categories.sort((a, b) => {
+    const ai = preferredOrder.indexOf(a);
+    const bi = preferredOrder.indexOf(b);
+    if (ai !== -1 || bi !== -1) return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+    return a.localeCompare(b, 'es');
+  });
+
+  filters.innerHTML = '<button class="filter active" data-filter="all">Todo</button>' +
+    categories.map(category => {
+      const product = products.find(p => p.categoria === category);
+      const label = product?.categoriaTexto || category;
+      return `<button class="filter" data-filter="${esc(category)}">${esc(label)}</button>`;
+    }).join('');
+
+  filters.querySelectorAll('.filter').forEach(button => {
+    button.addEventListener('click', () => {
+      activeFilter = button.dataset.filter;
+      filters.querySelectorAll('.filter').forEach(item => item.classList.toggle('active', item === button));
+      renderGallery();
+    });
+  });
+}
+
+function renderGallery() {
+  const visibleProducts = activeFilter === 'all'
+    ? products
+    : products.filter(p => p.categoria === activeFilter);
+
+  if (!visibleProducts.length) {
     gallery.innerHTML = '<p>No hay productos en esta categoría.</p>';
     return;
   }
 
-  gallery.innerHTML = list.map(p => `
-    <article class="card product-card" data-category="${esc(p.categoria)}" data-id="${esc(p.id)}" role="button" tabindex="0">
-      <div class="photo-cover">
-        <img src="${esc(p.fotos ? p.fotos[0] : '')}" alt="${esc(p.nombre)}">
-      </div>
-      <div class="card-body">
-        <small>${esc(p.categoriaTexto || p.categoria)}</small>
-        <h3>${esc(p.nombre)}</h3>
-        <p>${esc(p.descripcion)}</p>
-        <button class="view-product" type="button">Ver pieza →</button>
-      </div>
-    </article>
-  `).join('');
+  gallery.innerHTML = visibleProducts.map(product => {
+    const photos = getPhotos(product);
+    const image = photos[0] || '';
+    return `
+      <article class="card product-card" data-id="${esc(product.id)}" role="button" tabindex="0" aria-label="Ver ${esc(product.nombre)}">
+        <div class="photo-cover">
+          ${image ? `<img src="${esc(image)}" alt="${esc(product.nombre)}" loading="lazy">` : '<div class="placeholder"><span>SIN FOTO</span></div>'}
+        </div>
+        <div class="card-body">
+          <small>${esc(product.categoriaTexto || product.categoria || '')}</small>
+          <h3>${esc(product.nombre || '')}</h3>
+          <p>${esc(product.descripcion || '')}</p>
+          <button class="view-product" type="button">Ver pieza →</button>
+        </div>
+      </article>`;
+  }).join('');
 
   gallery.querySelectorAll('.product-card').forEach(card => {
     const open = () => openProduct(card.dataset.id);
     card.addEventListener('click', open);
-    card.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
+    card.addEventListener('keydown', event => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
         open();
       }
     });
@@ -174,54 +180,51 @@ function renderGallery(list = products) {
 }
 
 function openProduct(id) {
-  const p = products.find(x => x.id === id);
-  if (!p) return;
+  const product = products.find(item => String(item.id) === String(id));
+  if (!product) return;
 
-  document.getElementById('modalCategory').textContent = p.categoriaTexto || p.categoria;
-  document.getElementById('modalTitle').textContent = p.nombre;
-  document.getElementById('modalDescription').textContent = p.descripcion;
+  document.getElementById('modalCategory').textContent = product.categoriaTexto || product.categoria || '';
+  document.getElementById('modalTitle').textContent = product.nombre || '';
+  document.getElementById('modalDescription').textContent = product.descripcion || '';
 
-  // Render colores
-  document.getElementById('modalColors').innerHTML =
-    (p.colores || []).map(c =>
-      `<span class="color-chip"><i style="background:${esc(c.hex)}"></i>${esc(c.nombre)}</span>`
-    ).join('');
+  document.getElementById('modalColors').innerHTML = (Array.isArray(product.colores) ? product.colores : []).map(color =>
+    `<span class="color-chip"><i style="background:${esc(color.hex || '#ffffff')}"></i>${esc(color.nombre || '')}</span>`
+  ).join('');
 
-  // Render medidas
-  document.getElementById('modalMeasurements').innerHTML =
-    p.medidas ? `<span>${esc(p.medidas)}</span>` : '<span>Consultar</span>';
+  document.getElementById('modalMeasurements').innerHTML = product.medidas
+    ? `<span>${esc(product.medidas)}</span>`
+    : '<span>Consultar</span>';
 
-  // Render fotos y miniatura
-  const main = document.getElementById('modalPhoto');
-  const thumbs = document.querySelectorAll('.modal-thumbs .thumb');
-  const photos = p.fotos || [];
-
+  const photos = getPhotos(product);
+  const mainPhoto = document.getElementById('modalPhoto');
+  const thumbs = document.getElementById('modalThumbs');
   if (photos.length) {
-    main.className = 'modal-main-photo real-photo';
-    main.innerHTML = `<img src="${esc(photos[0])}" alt="${esc(p.nombre)}">`;
-
-    thumbs.forEach((t, i) => {
-      if (i < photos.length) {
-        t.style.display = 'block';
-        t.innerHTML = `<img src="${esc(photos[i])}" alt="">`;
-        t.onclick = () => {
-          main.innerHTML = `<img src="${esc(photos[i])}" alt="${esc(p.nombre)}">`;
-        };
-      } else {
-        t.style.display = 'none';
-      }
+    mainPhoto.className = 'modal-main-photo real-photo';
+    mainPhoto.innerHTML = `<img src="${esc(photos[0])}" alt="${esc(product.nombre || '')}">`;
+    thumbs.innerHTML = photos.slice(0, 3).map((photo, index) =>
+      `<div class="thumb"><img src="${esc(photo)}" alt="Imagen ${index + 1} de ${esc(product.nombre || '')}"></div>`
+    ).join('');
+    thumbs.querySelectorAll('.thumb').forEach((thumb, index) => {
+      thumb.addEventListener('click', () => {
+        mainPhoto.innerHTML = `<img src="${esc(photos[index])}" alt="${esc(product.nombre || '')}">`;
+      });
     });
+  } else {
+    mainPhoto.className = 'modal-main-photo placeholder';
+    mainPhoto.innerHTML = '<span>SIN FOTO</span>';
+    thumbs.innerHTML = '';
   }
 
-  // Render vídeo
   const videoBlock = document.getElementById('modalVideoBlock');
-  if (p.video) {
+  if (product.video) {
     videoBlock.style.display = 'block';
-    video.src = p.video;
+    video.src = product.video;
+    video.load();
   } else {
     videoBlock.style.display = 'none';
     video.pause();
     video.removeAttribute('src');
+    video.load();
   }
 
   modal.classList.add('open');
@@ -233,311 +236,36 @@ function closeModal() {
   modal.classList.remove('open');
   modal.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('no-scroll');
-  
-  // Detener el vídeo si se estaba reproduciendo
-  if (video) {
-    video.pause();
-    video.currentTime = 0;
-  }
+  video.pause();
+  video.currentTime = 0;
 }
 
-// Eventos de Filtro
-document.querySelectorAll('.filter').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    const filter = btn.dataset.filter;
-    renderGallery(filter === 'all'
-      ? products
-      : products.filter(p => p.categoria === filter));
-  });
-});
-
-// Eventos del Modal
 document.querySelector('.modal-close').addEventListener('click', closeModal);
 document.querySelector('.modal-backdrop').addEventListener('click', closeModal);
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeModal();
 });
+document.getElementById('modalContact').addEventListener('click', closeModal);
 
-// Cargar catálogo desde JSON
-/*fetch('products.json')
-  .then(r => {
-    if (!r.ok) throw new Error('No se pudo cargar products.json');
-    return r.json();
-  })
-  .then(data => {
-    products = data;
-    renderGallery();
-  })
-  .catch(err => {
-    console.error(err);
-    gallery.innerHTML = '<p>No se pudo cargar el catálogo. Asegúrate de tener el archivo products.json.</p>';
-  });*/
+async function loadProducts() {
+  gallery.innerHTML = '<p>Cargando creaciones…</p>';
+  const { data, error } = await supabaseClient
+    .from('productos')
+    .select('*')
+    .order('nombre', { ascending: true });
 
-// Datos del catálogo directamente integrados
-products = [
-  {
-    "id": "letra_bebe",
-    "nombre": "Letra Decorativa Bebé",
-    "categoria": "letras",
-    "categoriaTexto": "LETRAS DECORATIVAS",
-    "descripcion": "Creación personalizada en impresión 3D con tu nombre y animal deseado.",
-    "fotos": [
-      "assets/letra_bebe.jpeg",
-      "assets/letra_bebe2.jpeg",
-      "assets/letra_bebe3.jpeg"
-    ],
-    "video": "",
-    "colores": [
-      { "nombre": "Rojo", "hex": "#E63946" },
-      { "nombre": "Verde", "hex": "#19c979" },
-      { "nombre": "Amarillo", "hex": "#FFD166" },
-      { "nombre": "Azul", "hex": "#0066FF" },
-      { "nombre": "Azul cielo", "hex": "#38BDF8" },
-      { "nombre": "Azul hielo", "hex": "#E0F2FE" },
-      { "nombre": "Dorado", "hex": "#d58a00" },
-      { "nombre": "Plata", "hex": "#C0C0C0" },
-      { "nombre": "Blanco", "hex": "#ffffff" },
-      { "nombre": "Negro", "hex": "#121212" },
-      { "nombre": "Beige", "hex": "#F5F5DC" },
-      { "nombre": "Marrón", "hex": "#6F4E37" },
-      { "nombre": "Rosa", "hex": "#FFB7C5" },
-      { "nombre": "Violeta", "hex": "#7B2CBF" },
-      { "nombre": "Turquesa", "hex": "#00CED1" }
-    ],
-    "medidas": "180 mm x 150 mm"
-  },  
-
-  {
-    "id": "letra",
-    "nombre": "Letra Decorativa",
-    "categoria": "letras",
-    "categoriaTexto": "LETRAS DECORATIVAS",
-    "descripcion": "Creación personalizada en impresión 3D con tu nombre deseado.",
-    "fotos": [
-      "assets/letra.jpeg"
-    ],
-    "video": "",
-    "colores": [
-      { "nombre": "Rojo", "hex": "#E63946" },
-      { "nombre": "Verde", "hex": "#19c979" },
-      { "nombre": "Amarillo", "hex": "#FFD166" },
-      { "nombre": "Azul", "hex": "#0066FF" },
-      { "nombre": "Azul cielo", "hex": "#38BDF8" },
-      { "nombre": "Azul hielo", "hex": "#E0F2FE" },
-      { "nombre": "Dorado", "hex": "#d58a00" },
-      { "nombre": "Plata", "hex": "#C0C0C0" },
-      { "nombre": "Blanco", "hex": "#ffffff" },
-      { "nombre": "Negro", "hex": "#121212" },
-      { "nombre": "Beige", "hex": "#F5F5DC" },
-      { "nombre": "Marrón", "hex": "#6F4E37" },
-      { "nombre": "Rosa", "hex": "#FFB7C5" },
-      { "nombre": "Violeta", "hex": "#7B2CBF" },
-      { "nombre": "Turquesa", "hex": "#00CED1" }
-    ],
-    "medidas": "180 mm x 150 mm"
-  },  
-
-  {
-    "id": "algeciras",
-    "nombre": "Lámpara LED con escudo del Algeciras y nombre personalizado",
-    "categoria": "lamparas",
-    "categoriaTexto": "LÁMPARAS",
-    "descripcion": "Creación personalizada en impresión 3D con nombre y diseño propio.",
-    "fotos": [
-      "assets/algeciras_berlanga.jpeg"
-    ],
-    "video": "assets/lampara_berlanga.mp4",
-    "colores": [
-      { "nombre": "Único", "hex": "#ffffff" }
-    ],
-    "medidas": "220 mm x 220 mm x 40 mm"
-  },
-  
-  {
-    "id": "betis",
-    "nombre": "Lámpara LED con escudo del Betis y nombre personalizado",
-    "categoria": "lamparas",
-    "categoriaTexto": "LÁMPARAS",
-    "descripcion": "Creación personalizada en impresión 3D con nombre y diseño propio.",
-    "fotos": [
-      "assets/betis-tino.jpeg"
-    ],
-    "video": "assets/proceso-tino.mp4",
-    "colores": [
-      { "nombre": "Único", "hex": "#ffffff" }
-    ],
-    "medidas": "220 mm x 220 mm x 40 mm"
-  },
-
-  {
-    "id": "jurasico",
-    "nombre": "Lámpara LED con cartel de Parque Jurásico",
-    "categoria": "lamparas",
-    "categoriaTexto": "LÁMPARAS",
-    "descripcion": "Creación personalizada en impresión 3D con cartel de película.",
-    "fotos": [
-      "assets/parque_jurasico.jpeg"
-    ],
-    "video": "assets/parque_jurasico.mp4",
-    "colores": [
-      { "nombre": "Único", "hex": "#ffffff" }
-    ],
-    "medidas": "220 mm x 220 mm x 40 mm"
-  },
-
-  {
-    "id": "madrid",
-    "nombre": "Lámpara LED con escudo del Real Madrid y nombre personalizado",
-    "categoria": "lamparas",
-    "categoriaTexto": "LÁMPARAS",
-    "descripcion": "Creación personalizada en impresión 3D con escudo y nombre propio.",
-    "fotos": [
-      "assets/madrid-hugo.jpeg"
-    ],
-    "video": "",
-    "colores": [
-      { "nombre": "Único", "hex": "#ffffff" }
-    ],
-    "medidas": "220 mm x 220 mm x 40 mm"
-  },
-  {
-    "id": "llavero_mario",
-    "nombre": "Llaveros Mario Bros (champiñón / interrogante)",
-    "categoria": "llaveros",
-    "categoriaTexto": "LLAVEROS",
-    "descripcion": "Creación personalizada en impresión 3D en varios colores.",
-    "fotos": [
-      "assets/llavero_mario1.jpeg",
-      "assets/llavero_mario2.jpeg"
-    ],
-    "video": "",
-    "colores": [
-      { "nombre": "Amarillo", "hex": "#ffcc00" },
-      { "nombre": "Rojo", "hex": "#e63946" },
-      { "nombre": "Azul", "hex": "#123ed0" },
-      { "nombre": "Verde", "hex": "#19c979" }
-    ],
-    "medidas": "Champiñon: 25 mm x 25 mm x 25 mm. Interrogante 30 mm x 30 mm x 30 mm"
-  },
-
-  {
-    "id": "llavero_españa",
-    "nombre": "Llavero Selección Española con copa giratoria",
-    "categoria": "llaveros",
-    "categoriaTexto": "LLAVEROS",
-    "descripcion": "Creación personalizada en impresión 3D con copa giratoria.",
-    "fotos": [
-      "assets/llavero_espana.jpeg"
-    ],
-    "video": "assets/llavero_espana.mp4",
-    "colores": [
-      { "nombre": "Único", "hex": "#ffffff" }
-    ],
-    "medidas": "85 mm x 55 mm"
-  },
-
-  {
-    "id": "llavero_algeciras",
-    "nombre": "Llavero Algeciras",
-    "categoria": "llaveros",
-    "categoriaTexto": "LLAVEROS",
-    "descripcion": "Creación personalizada en impresión 3D.",
-    "fotos": [
-      "assets/llavero_algeciras.jpeg"
-    ],
-    "video": "",
-    "colores": [
-      { "nombre": "Único", "hex": "#ffffff" }
-    ],
-    "medidas": "85 mm x 47 mm"
-  },
-
-  {
-    "id": "hucha_mario",
-    "nombre": "Hucha Mario Bros",
-    "categoria": "otros",
-    "categoriaTexto": "OTROS",
-    "descripcion": "Creación en impresión 3D de una hucha con tapadera superior desmontable.",
-    "fotos": [
-      "assets/hucha_mario.jpeg"
-    ],
-    "video": "",
-    "colores": [
-      { "nombre": "Rojo", "hex": "#E63946" },
-      { "nombre": "Verde", "hex": "#19c979" },
-      { "nombre": "Amarillo", "hex": "#FFD166" },
-      { "nombre": "Azul", "hex": "#0066FF" },
-      { "nombre": "Azul cielo", "hex": "#38BDF8" },
-      { "nombre": "Azul hielo", "hex": "#E0F2FE" },
-      { "nombre": "Dorado", "hex": "#d58a00" },
-      { "nombre": "Plata", "hex": "#C0C0C0" },
-      { "nombre": "Blanco", "hex": "#ffffff" },
-      { "nombre": "Negro", "hex": "#121212" },
-      { "nombre": "Beige", "hex": "#F5F5DC" },
-      { "nombre": "Marrón", "hex": "#6F4E37" },
-      { "nombre": "Rosa", "hex": "#FFB7C5" },
-      { "nombre": "Violeta", "hex": "#7B2CBF" },
-      { "nombre": "Turquesa", "hex": "#00CED1" }
-    ],
-    "medidas": "70 mm x 70 mm x 70 mm"
-  },
-
-  {
-    "id": "lampara_mario",
-    "nombre": "Lámpara Mario Bros",
-    "categoria": "lamparas",
-    "categoriaTexto": "Lámparas",
-    "descripcion": "Creación en impresión 3D de una lámpara de Mario Bros.",
-    "fotos": [
-      "assets/lampara_mario.jpeg"
-    ],
-    "video": "assets/lampara_mario.mp4",
-    "colores": [
-      { "nombre": "Rojo", "hex": "#E63946" },
-      { "nombre": "Verde", "hex": "#19c979" },
-      { "nombre": "Amarillo", "hex": "#FFD166" },
-      { "nombre": "Azul", "hex": "#0066FF" },
-      { "nombre": "Azul cielo", "hex": "#38BDF8" },
-      { "nombre": "Azul hielo", "hex": "#E0F2FE" },
-      { "nombre": "Dorado", "hex": "#d58a00" },
-      { "nombre": "Plata", "hex": "#C0C0C0" },
-      { "nombre": "Blanco", "hex": "#ffffff" },
-      { "nombre": "Negro", "hex": "#121212" },
-      { "nombre": "Beige", "hex": "#F5F5DC" },
-      { "nombre": "Marrón", "hex": "#6F4E37" },
-      { "nombre": "Rosa", "hex": "#FFB7C5" },
-      { "nombre": "Violeta", "hex": "#7B2CBF" },
-      { "nombre": "Turquesa", "hex": "#00CED1" }
-    ],
-    "medidas": "100 mm x 100 mm x 100 mm"
-  },
-  {
-    "id": "letras_mario",
-    "nombre": "Logo sobremesa Mario Bros",
-    "categoria": "otros",
-    "categoriaTexto": "OTROS",
-    "descripcion": "Creación en impresión 3D del logo de Mario Bros.",
-    "fotos": [
-      "assets/logo_mario.jpeg"
-    ],
-    "video": "",
-    "colores": [
-      { "nombre": "Rojo", "hex": "#E63946" },
-      { "nombre": "Verde", "hex": "#19c979" },
-      { "nombre": "Amarillo", "hex": "#FFD166" },
-      { "nombre": "Azul", "hex": "#0066FF" },
-      { "nombre": "Blanco", "hex": "#ffffff" },
-      { "nombre": "Negro", "hex": "#121212" }
-    ],
-    "medidas": "140 mm x 70 mm"
+  if (error) {
+    console.error('Error al cargar productos desde Supabase:', error);
+    gallery.innerHTML = '<p>No se ha podido cargar el catálogo en este momento. Inténtalo de nuevo más tarde.</p>';
+    return;
   }
-];
 
-// Cargar la galería directamente al abrir la página
-renderGallery();
+  products = Array.isArray(data) ? data : [];
+  renderFilters();
+  renderGallery();
+}
+
+loadProducts();
 </script>
-
 </body>
 </html>

@@ -18,6 +18,7 @@
     </nav>
   </div>
 </header>
+
 <main>
   <section class="hero">
     <div class="container hero-grid">
@@ -98,6 +99,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLI
 
 let products = [];
 let activeFilter = 'all';
+
 const gallery = document.getElementById('gallery');
 const filters = document.getElementById('filters');
 const modal = document.getElementById('productModal');
@@ -117,6 +119,7 @@ function getPhotos(product) {
 function renderFilters() {
   const categories = [...new Set(products.map(p => p.categoria).filter(Boolean))];
   const preferredOrder = ['llaveros', 'lamparas', 'letras', 'otros'];
+
   categories.sort((a, b) => {
     const ai = preferredOrder.indexOf(a);
     const bi = preferredOrder.indexOf(b);
@@ -153,6 +156,7 @@ function renderGallery() {
   gallery.innerHTML = visibleProducts.map(product => {
     const photos = getPhotos(product);
     const image = photos[0] || '';
+
     return `
       <article class="card product-card" data-id="${esc(product.id)}" role="button" tabindex="0" aria-label="Ver ${esc(product.nombre)}">
         <div class="photo-cover">
@@ -169,7 +173,9 @@ function renderGallery() {
 
   gallery.querySelectorAll('.product-card').forEach(card => {
     const open = () => openProduct(card.dataset.id);
+
     card.addEventListener('click', open);
+
     card.addEventListener('keydown', event => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
@@ -187,28 +193,39 @@ function openProduct(id) {
   document.getElementById('modalTitle').textContent = product.nombre || '';
   document.getElementById('modalDescription').textContent = product.descripcion || '';
 
-  document.getElementById('modalColors').innerHTML = (Array.isArray(product.colores) ? product.colores : []).map(color =>
-    `<span class="color-chip"><i style="background:${esc(color.hex || '#ffffff')}"></i>${esc(color.nombre || '')}</span>`
-  ).join('');
+  document.getElementById('modalColors').innerHTML =
+    (Array.isArray(product.colores) ? product.colores : []).map(color =>
+      `<span class="color-chip"><i style="background:${esc(color.hex || '#ffffff')}"></i>${esc(color.nombre || '')}</span>`
+    ).join('');
 
   document.getElementById('modalMeasurements').innerHTML = product.medidas
     ? `<span>${esc(product.medidas)}</span>`
     : '<span>Consultar</span>';
 
+  // GALERÍA DE FOTOGRAFÍAS
   const photos = getPhotos(product);
   const mainPhoto = document.getElementById('modalPhoto');
   const thumbs = document.getElementById('modalThumbs');
+
+  // Limpiar las miniaturas anteriores
+  thumbs.innerHTML = '';
+
   if (photos.length) {
     mainPhoto.className = 'modal-main-photo real-photo';
     mainPhoto.innerHTML = `<img src="${esc(photos[0])}" alt="${esc(product.nombre || '')}">`;
-    thumbs.innerHTML = photos.slice(0, 3).map((photo, index) =>
+
+    // Crear automáticamente una miniatura por cada fotografía
+    thumbs.innerHTML = photos.map((photo, index) =>
       `<div class="thumb"><img src="${esc(photo)}" alt="Imagen ${index + 1} de ${esc(product.nombre || '')}"></div>`
     ).join('');
+
+    // Cambiar la fotografía principal al pulsar una miniatura
     thumbs.querySelectorAll('.thumb').forEach((thumb, index) => {
       thumb.addEventListener('click', () => {
         mainPhoto.innerHTML = `<img src="${esc(photos[index])}" alt="${esc(product.nombre || '')}">`;
       });
     });
+
   } else {
     mainPhoto.className = 'modal-main-photo placeholder';
     mainPhoto.innerHTML = '<span>SIN FOTO</span>';
@@ -216,6 +233,7 @@ function openProduct(id) {
   }
 
   const videoBlock = document.getElementById('modalVideoBlock');
+
   if (product.video) {
     videoBlock.style.display = 'block';
     video.src = product.video;
@@ -242,13 +260,16 @@ function closeModal() {
 
 document.querySelector('.modal-close').addEventListener('click', closeModal);
 document.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape') closeModal();
 });
+
 document.getElementById('modalContact').addEventListener('click', closeModal);
 
 async function loadProducts() {
   gallery.innerHTML = '<p>Cargando creaciones…</p>';
+
   const { data, error } = await supabaseClient
     .from('productos')
     .select('*')
@@ -261,6 +282,7 @@ async function loadProducts() {
   }
 
   products = Array.isArray(data) ? data : [];
+
   renderFilters();
   renderGallery();
 }
